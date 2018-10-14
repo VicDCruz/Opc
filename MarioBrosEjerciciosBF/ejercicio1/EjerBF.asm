@@ -22,6 +22,8 @@ array1	WORD 2, 4, 6
 rever1	DWORD 3 DUP(?)
 
 resStr 	BYTE "Suma de (1): ", 0
+resBefore BYTE "(2) Antes del intercambio", 0
+resAfter BYTE "(2) Despues del intercambio", 0
 
 .CODE
 main PROC
@@ -38,8 +40,31 @@ main PROC
 	call CrLf
 
 ; Pte. 2
-	mov EBX, 0
-	xchg EBX, SDWORD PTR []
+	mov  edx, OFFSET resBefore
+	call WriteString
+	call CrLf
+	mov  esi, OFFSET arrW  ; Desde donde empezar
+    mov  ecx, 6         ; Cuantos quiero imprimir
+    mov  ebx, TYPE arrW    ; De cuanto en cuanto brincarse
+    call DumpMem
+    call CrLf
+
+	mov ebx, SDWORD PTR [arrW]
+	xchg ebx, SDWORD PTR [arrSW]
+	xchg ebx, DWORD PTR [arrW]
+
+	mov bx, [arrW + 4]
+	xchg bx, [arrSW + 4]
+	xchg bx, [arrW + 4]
+
+	mov  edx, OFFSET resAfter
+	call WriteString
+	call CrLf
+	mov  esi, OFFSET arrW  ; Desde donde empezar
+    mov  ecx, 6         ; Cuantos quiero imprimir
+    mov  ebx, TYPE arrW    ; De cuanto en cuanto brincarse
+    call DumpMem
+    call CrLf
 
 	exit
 main ENDP

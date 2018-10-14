@@ -49,7 +49,7 @@ main PROC
     call WriteHex
     call CrLf
 
-    mov  esi, OFFSET A  : Desde donde empezar
+    mov  esi, OFFSET A  ; Desde donde empezar
     mov  ecx, 4         ; Cuantos quiero imprimir
     mov  ebx, TYPE A    ; De cuanto en cuanto brincarse
     call DumpMem
