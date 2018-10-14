@@ -17,9 +17,9 @@ includelib \masm32\Kernel32.lib
 cont DWORD 1
 suma DWORD 0
 alfa DWORD 3
-mensaje BYTE 0dh,0ah,"Teclee un dato: ",0dh,0ah,0
-mensaje2 BYTE 0dh,0ah,"Siguiente termino: ",0dh,0ah,0
-mensaje3 BYTE 0dh,0ah,"TOTAL:  ",0dh,0ah,0
+mensaje BYTE 0dh,0ah,"Teclee el dato N: ", 0
+mensaje2 BYTE 0dh,0ah,"Siguiente termino: ", 0
+mensaje3 BYTE 0dh,0ah,"TOTAL:  ", 0
 
 .CODE
 ; Procedimiento principal
@@ -50,6 +50,7 @@ l1:
     DEC ECX
 JNZ l1
 
+    call CrLf
     mov edx,OFFSET mensaje3
     call WriteString
     mov eax, suma

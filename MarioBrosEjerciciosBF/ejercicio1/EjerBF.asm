@@ -29,14 +29,15 @@ resAfter BYTE "(2) Despues del intercambio", 0
 main PROC
 ; Pte. 1
 	mov EAX, 0 ; EAX = 0
-	mov EAX, SDWORD PTR val3 ; EAX = val3
-	add EAX, SDWORD PTR val4 ; EAX += val4
-	add EAX, SDWORD PTR [arrSW + 2] ; EAX += [arrSW + 2]
-	add EAX, [arrSD + 1] ; EAX += [arrSD + 1]
+	mov AL, val3 ; EAX = val3
+	add AX, val4 ; EAX += val4
+	add AX, [arrSW + 4] ; EAX += [arrSW + 2]
+	add EAX, [arrSD + 4] ; EAX += [arrSD + 1]
 
 	mov EDX, OFFSET resStr
     call WriteString
 	call WriteInt
+	call CrLf
 	call CrLf
 
 ; Pte. 2
