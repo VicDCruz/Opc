@@ -1,4 +1,4 @@
-TITLE *MASM Template	(CodigoBase.asm)*
+TITLE *MASM Template	(ejercicioBI.asm)*
 
 ; Descripción general:
 ; 
@@ -17,11 +17,11 @@ includelib \masm32\Irvine\Kernel32.lib
 .DATA
 ; Declaración de datos
 n byte ?
-temperaturas dword ?
+temperaturas dword 11,22,33,44
 i byte 0
 menorTemp dword 0
 iMenor byte 0
-paridad byte ?
+paridad byte ?, 0
 
 msjInicio byte "Dato n: ", 0
 msjMinIni byte "Minimo de las temperaturas: ", 0
@@ -51,17 +51,15 @@ main PROC
             call CrLf
             JMP getN
         .ENDIF
-            JMP getTemperaturas
+        JMP getTemperaturas
+        call CrLf
     getTemperaturas:
         ; MARIO
     printMenorTemp:
         ; MARIO
     printTempInv:
         mov ESI, LENGTHOF temperaturas
-        mov EAX, ESI
-        call WriteInt
-        dec ESI
-        .WHILE ESI >= 0
+        .WHILE ESI >= 1
             mov EBX, temperaturas[ESI*TYPE temperaturas]
             test BL, 00000001b
             .IF PARITY?
@@ -85,6 +83,7 @@ main PROC
             call WriteString
             call CrLf
         .ENDW
+        call CrLf
     fin:
         mov EDX, OFFSET msjAdios
         call WriteString
