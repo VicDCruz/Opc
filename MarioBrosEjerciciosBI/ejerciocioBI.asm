@@ -6,7 +6,7 @@ TITLE *MASM Template	(ejercicioBI.asm)*
 ; Ultima fecha de modificacion:
 ; 20/10/18
 
-; Libreri­as 
+; Libreriï¿½as 
 INCLUDE \masm32\Irvine\Irvine32.inc
 
 INCLUDELIB \masm32\Irvine\Irvine32.lib
@@ -78,20 +78,20 @@ main PROC
      JNZ getTemperaturas
         
         ; MARIO
-        mov EDX,0
+        mov EDX, 0
         mov ECX, n
         MOV EDI, 0
         JMP printMenorTemp
+        mov EAX, menorTemp
         
     printMenorTemp:
         .WHILE EDX < ECX
-                mov EBX, temperaturas[EDI*TYPE temperaturas]
-                mov EAX, menorTemp
-                NEG EBX
-            .IF  EBX > EAX
+            mov EBX, temperaturas[EDI*TYPE temperaturas]
+            sub EBX, EAX
+            .IF SIGN?
                 mov EAX, temperaturas[EDI*TYPE temperaturas]
-                mov menorTemp, EAX   
-            .ENDIF 
+                mov menorTemp, EAX
+            .ENDIF
             
             INC EDI
             INC EDX
@@ -109,12 +109,14 @@ main PROC
     printTempInv:
         mov ESI, n
         .WHILE ESI >= 1
+            dec ESI
             mov EBX, temperaturas[ESI*TYPE temperaturas]
-            test BL, 00000001b
+            inc ESI
+            test BL, 1
             .IF PARITY?
-                mov paridad, "I"
-            .ELSE
                 mov paridad, "P"
+            .ELSE
+                mov paridad, "I"
             .ENDIF
             dec ESI
             mov EDX, OFFSET msjRevesInicio
