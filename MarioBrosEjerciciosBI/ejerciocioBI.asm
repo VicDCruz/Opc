@@ -1,12 +1,12 @@
 TITLE *MASM Template	(ejercicioBI.asm)*
 
-; Descripción general:
-; 
+; Descripcion general:
+; Tarea ejercicioBI
 
-; Última fecha de modificación:
-; 
+; Ultima fecha de modificacion:
+; 20/10/18
 
-; Librerías 
+; Libreri�as 
 INCLUDE \masm32\Irvine\Irvine32.inc
 
 INCLUDELIB \masm32\Irvine\Irvine32.lib
@@ -15,10 +15,11 @@ includelib \masm32\Irvine\Kernel32.lib
 
 
 .DATA
-; Declaración de datos
-n byte ?
-temperaturas dword 11,22,33,44
+; Declaracion de datos
+n dword 0
+temperaturas dword 00,00,00,00,00,00,00,00,00
 i byte 0
+j byte 0
 menorTemp dword 0
 iMenor byte 0
 paridad byte ?, 0
@@ -26,6 +27,8 @@ paridad byte ?, 0
 msjInicio byte "Dato n: ", 0
 msjMinIni byte "Minimo de las temperaturas: ", 0
 msjMinFin byte "en: ", 0
+msjTecleeTemp1 byte "Teclee la ", 0
+msjTecleeTemp2 byte " temperatura: ", 0
 
 msjRevesInicio byte "Temperatura ", 0
 msjRevesMitad byte ": ", 0
@@ -44,21 +47,67 @@ main PROC
         mov EDX, offset msjInicio
         call WriteString
         call ReadInt
-        ; mov n, EAX
+        
         .IF EAX < 1 || EAX > 10
             mov EDX, offset msjErrorGetN
             call WriteString
             call CrLf
             JMP getN
         .ENDIF
+        
+        mov n, EAX
+        MOV EBX, n
+        MOV EAX, 0
+        MOV ECX, 0
+        MOV EDI,0
         JMP getTemperaturas
         call CrLf
+        
     getTemperaturas:
+        mov EDX, OFFSET msjTecleeTemp1
+        call WriteString 
+        INC ECX
+        mov EAX, ECX
+        call WriteInt
+        mov EDX, OFFSET msjTecleeTemp2
+        call WriteString
+        call ReadInt
+        mov temperaturas[EDI*TYPE temperaturas], EAX
+        INC EDI
+        DEC EBX
+     JNZ getTemperaturas
+        
         ; MARIO
+        mov EDX,0
+        mov ECX, n
+        MOV EDI, 0
+        JMP printMenorTemp
+        
     printMenorTemp:
+        .WHILE EDX < ECX
+                mov EBX, temperaturas[EDI*TYPE temperaturas]
+                mov EAX, menorTemp
+                NEG EBX
+            .IF  EBX > EAX
+                mov EAX, temperaturas[EDI*TYPE temperaturas]
+                mov menorTemp, EAX   
+            .ENDIF 
+            
+            INC EDI
+            INC EDX
+            
+        .ENDW
+
+        Call CrLf
+        mov EDX, OFFSET msjMinIni
+        call WriteString
+        mov EAX, menorTemp
+        call WriteInt
+        
+        Call CrLf
         ; MARIO
     printTempInv:
-        mov ESI, LENGTHOF temperaturas
+        mov ESI, n
         .WHILE ESI >= 1
             mov EBX, temperaturas[ESI*TYPE temperaturas]
             test BL, 00000001b
