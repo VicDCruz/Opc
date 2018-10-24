@@ -130,7 +130,6 @@ main PROC
             mov EDX, OFFSET msjRevesInicio
             call WriteString
             mov EAX, EBX
-            inc EAX
             call WriteInt
             mov EDX, OFFSET msjRevesMitad
             call WriteString
