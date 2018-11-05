@@ -18,12 +18,18 @@ includelib \masm32\Irvine\Kernel32.lib
 ; Declaracion de datos
 n dword 0
 nNueva byte 0
-temperaturas dword 00,00,00,00,00,00,00,00,00
+temperaturas sdword 00,00,00,00,00,00,00,00,00
 i byte 0
 j byte 0
-menorTemp dword 0
+menorTemp sdword 0
 iMenor byte 0
 paridad byte ?, 0
+
+dirTmp dword ?
+dirVec dword ?
+nVec byte ?
+nVec2 byte ?
+nVecTmp sdword ?
 
 msjInicio byte "Dato n: ", 0
 msjMinIni byte "Minimo de las temperaturas: ", 0
@@ -81,6 +87,8 @@ main PROC
         mov EDX, 0
         mov ECX, n
         MOV EDI, 0
+        mov EAX, temperaturas
+        call WriteInt
         JMP printMenorTemp
         mov EAX, menorTemp
         
@@ -88,7 +96,7 @@ main PROC
         .WHILE EDX < ECX
             mov EBX, temperaturas[EDI*TYPE temperaturas]
             sub EBX, EAX
-            .IF SIGN?
+            .IF EAX > temperaturas[EDI*TYPE temperaturas]
                 mov EAX, temperaturas[EDI*TYPE temperaturas]
                 mov menorTemp, EAX
             .ENDIF
@@ -108,23 +116,10 @@ main PROC
     printTempInv:
         mov al, BYTE PTR n
         mov nNueva, al
-        mov EBX, 0
         mov ECX, 0
-        mov EDX, 0
-        call WriteInt
-        .WHILE BL < nNueva
-            mov DL, BL
-            inc DL
-            .WHILE DL < nNueva
-                mov EAX, temperaturas[EBX*TYPE temperaturas]
-                .IF EAX > temperaturas[EDX*TYPE temperaturas]
-                    XCHG EAX, temperaturas[EDX*TYPE temperaturas]
-                    mov temperaturas[EBX*TYPE temperaturas], EAX
-                .ENDIF
-                inc DL
-            .ENDW
-            inc BL
-        .ENDW
+        push OFFSET temperaturas
+        push DWORD PTR nNueva
+        call VecSelDir
 
         mov EBX, 0
         .WHILE BL < nNueva
@@ -161,6 +156,44 @@ main PROC
 exit  
 main ENDP
 ; Termina el procedimiento principal
+
+VecSelDir PROC
+    pop dirTmp
+    pop nVecTmp
+    mov BL, BYTE PTR nVecTmp
+    mov nVec, BL
+    pop dirVec
+    mov EDI, dirVec
+    mov ECX, dirVec
+    add ECX, TYPE sdword
+    mov EBX, 0
+    mov EDX, 0
+    mov BH, nVec
+    dec BH
+    mov nVec2, BH
+    .WHILE BL < nVec2
+        mov DL, BL
+        inc DL
+        .WHILE DL < nVec
+            mov EAX, [EDI]
+            call WriteInt
+            .IF SDWORD PTR EAX > [ECX]
+                mov nVecTmp, EAX
+                mov EAX, [ECX]
+                XCHG EAX, [ECX]
+                mov [EDI], EAX
+                call WriteInt
+                call WriteHex
+            .ENDIF
+            add ECX, TYPE sdword
+            inc DL
+        .ENDW
+        add EDI, TYPE sdword
+        inc BL
+    .ENDW
+    push dirTmp
+    ret
+VecSelDir ENDP
 
 END main
 ; Termina el ?rea de Ensamble
