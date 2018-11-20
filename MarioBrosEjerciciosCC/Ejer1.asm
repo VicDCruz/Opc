@@ -85,6 +85,12 @@ main ENDP
 ; Termina el procedimiento principal
 
 printBinary PROC
+; printBinary(n, dirNumber): void
+; Desplegar los 'N' numeros que se requirieron al principio del programa
+; con o sin modificación en memoria
+; Recibe
+;   Stack: n y offset de number
+; Variables automáticas y locales
     pop dirTmp
     pop ESI
     pop EBX
@@ -100,6 +106,14 @@ printBinary PROC
 printBinary ENDP
 
 getN PROC
+; getN(dirMessage, dirN): void
+; Obtener el valor de 'n' dado por el usuario e insertarlo en la
+; dirección de memoria de 'n'
+; Recibe
+;   Stack: dirección de memoria de donde está el mensaje para pedir
+;           el valor de n y dirN implica la dirección en memoria donde
+;           se almacenará el valor de 'N'
+; Variables automáticas y locales
     pop dirTmp
     pop ESI
     pop EDI
@@ -114,6 +128,15 @@ getN PROC
 getN ENDP
 
 shiftNumber PROC
+; shiftNumber(n, dirShift, dirNumber): void
+; Hacer una rotación bit a bit del arreglo de los números DWORD, hasta
+; cumplir con el número de cambios dado por el usuario (shift)
+; Recibe
+;   Stack: n, la cantidad de números que se recibieron por el usuario
+;           la dirección en memoria de el número de cambios que iba a
+;           sufrir el número, hacia la derecha y la dirección del
+;           conjunto del arreglo de números DWORD
+; Variables automáticas y locales
     pop dirTmp
     pop ESI
     pop EDX

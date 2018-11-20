@@ -49,6 +49,14 @@ main ENDP
 ; Termina el procedimiento principal
 
 toHex PROC
+; toHex(dirNumber): numberToHex
+; Recibe:
+;   Stack: la dirección del número entero de 32 bits a convertir
+;           en hexadecimal
+; Regresa:
+;   Stack: numberToHex, el string con la representación del entero en
+;           hexadecimal.
+; Variables automáticas y locales
     pop dirTmp
     pop ESI
     mov EBX, 0
