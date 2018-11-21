@@ -19,7 +19,7 @@ mNul=00h
 fHandle DWORD ?
 fName BYTE "one.txt",mNul
 txt1 BYTE mCr,mLf, "Hola que tal.",mNul
-txt2 BYTE "Nos vemos.",mNul
+txt2 BYTE mCr,mLf, "Nos vemos.",mNul
 hlv BYTE mCr,mLf, "HASTA LA VISTA.",mNul
 
 .CODE
