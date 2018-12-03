@@ -26,7 +26,7 @@ includelib \masm32\Irvine\Kernel32.lib
     m DWORD 0
     f DWORD 10
 
-    menor DWORD ?
+    menor REAL8 ?
     menorIndex DWORD ?
 
 .CODE
@@ -86,7 +86,7 @@ LeerLista PROC
         mov EDX, OFFSET messageGetArrLista
         call WriteString
         call ReadFloat
-        fstp [ESI + EBX * REAL8]
+        fstp REAL8 PTR [ESI + EBX * 8]
         inc EBX
     .ENDW
 
@@ -103,8 +103,8 @@ FacLista PROC
     mov EBX, 0
     .WHILE EBX < m
         fild f
-        fmul [ESI + EBX * REAL8]
-        fstp [ESI + EBX * REAL8]
+        fmul REAL8 PTR [ESI + EBX * REAL8]
+        fstp REAL8 PTR [ESI + EBX * REAL8]
         inc EBX
     .ENDW
 
@@ -118,10 +118,12 @@ MenorLista PROC
     pop m
 
     mov EBX, 0
-    mov menor, [ESI + EBX * REAL8]
+    fld REAL8 PTR [ESI + EBX * REAL8]
+    fstp menor
     .WHILE EBX < m
-        .IF [ESi + EBX * REAL8] < menor
-            mov menor, [ESI + EBX * REAL8]
+        .IF [ESI + EBX * REAL8] < menor
+            fld REAL8 PTR [ESI + EBX * REAL8]
+            fstp menor
             mov menorIndex, EBX
         .ENDIF
         inc EBX
@@ -140,10 +142,10 @@ Imprime PROC
 
     mov EBX, 0
     .WHILE EBX < m
-        fld [ESI + EBX * REAL8]
+        fld REAL8 PTR [ESI + EBX * REAL8]
         call WriteFloat
         call CrLf
-        fstp [ESI + EBX * REAL8]
+        fstp REAL8 PTR [ESI + EBX * REAL8]
         inc EBX
     .ENDW
 
