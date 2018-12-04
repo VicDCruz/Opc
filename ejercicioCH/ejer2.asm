@@ -20,6 +20,7 @@ includelib \masm32\Irvine\Kernel32.lib
     messageGetN BYTE "Valor de n: ", 0
     messageGetFactor BYTE "Valor de Factor: ", 0
     messageGetArrLista BYTE ". Valor de ArrLista: ", 0
+    messageMenorLista BYTE "El menor de la lista es: ", 0
     coma BYTE ", ", 0
 
     dirTmp DWORD ?
@@ -60,6 +61,8 @@ main PROC
     push n
     push OFFSET arrLista
     CALL MenorLista
+    mov EDX, OFFSET messageMenorLista
+    call WriteString
     CALL WriteFloat
     mov EDX, OFFSET coma
     call WriteString
@@ -90,7 +93,7 @@ LeerLista PROC
         mov EDX, OFFSET messageGetArrLista
         call WriteString
         call ReadFloat
-        fstp REAL8 PTR [ESI + EBX * 8]
+        fstp REAL8 PTR [ESI + EBX * TYPE REAL8]
         inc EBX
     .ENDW
 
@@ -107,8 +110,8 @@ FacLista PROC
     mov EBX, 0
     .WHILE EBX < m
         fild f
-        fmul REAL8 PTR [ESI + EBX * REAL8]
-        fstp REAL8 PTR [ESI + EBX * REAL8]
+        fmul REAL8 PTR [ESI + EBX * TYPE REAL8]
+        fstp REAL8 PTR [ESI + EBX * TYPE REAL8]
         inc EBX
     .ENDW
 
@@ -122,16 +125,16 @@ MenorLista PROC
     pop m
 
     mov EBX, 0
-    fld REAL8 PTR [ESI + EBX * REAL8]
+    fld REAL8 PTR [ESI + EBX * TYPE REAL8]
     fst menor
     .WHILE EBX < m
-        fcomp REAL8 PTR [ESI + EBX * REAL8]
+        fcomp REAL8 PTR [ESI + EBX * TYPE REAL8]
         fld menor
         fnstsw ax
         sahf
         .IF !Zero? && !Parity? && !Carry?
             fstp menor
-            fld REAL8 PTR [ESI + EBX * REAL8]
+            fld REAL8 PTR [ESI + EBX * TYPE REAL8]
             fst menor
             mov menorIndex, EBX
         .ENDIF
@@ -151,14 +154,15 @@ Imprime PROC
 
     mov EBX, 0
     .WHILE EBX < m
-        fld REAL8 PTR [ESI + EBX * REAL8]
+        fld REAL8 PTR [ESI + EBX * TYPE REAL8]
         call WriteFloat
         call CrLf
-        fstp REAL8 PTR [ESI + EBX * REAL8]
+        fstp REAL8 PTR [ESI + EBX * TYPE REAL8]
         inc EBX
     .ENDW
 
     push dirTmp
+    ret
 Imprime ENDP
 
 END main
