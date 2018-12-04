@@ -19,7 +19,8 @@ includelib \masm32\Irvine\Kernel32.lib
 
     messageGetN BYTE "Valor de n: ", 0
     messageGetFactor BYTE "Valor de Factor: ", 0
-    messageGetArrLista BYTE ". Valor de ArrLista", 0
+    messageGetArrLista BYTE ". Valor de ArrLista: ", 0
+    coma BYTE ", ", 0
 
     dirTmp DWORD ?
 
@@ -60,9 +61,12 @@ main PROC
     push OFFSET arrLista
     CALL MenorLista
     CALL WriteFloat
+    mov EDX, OFFSET coma
+    call WriteString
     fstp menor
     pop EAX
     CALL WriteInt
+    call CrLf
 
     push n
     push OFFSET arrLista
@@ -119,18 +123,23 @@ MenorLista PROC
 
     mov EBX, 0
     fld REAL8 PTR [ESI + EBX * REAL8]
-    fstp menor
+    fst menor
     .WHILE EBX < m
-        .IF [ESI + EBX * REAL8] < menor
-            fld REAL8 PTR [ESI + EBX * REAL8]
+        fcomp REAL8 PTR [ESI + EBX * REAL8]
+        fld menor
+        fnstsw ax
+        sahf
+        .IF !Zero? && !Parity? && !Carry?
             fstp menor
+            fld REAL8 PTR [ESI + EBX * REAL8]
+            fst menor
             mov menorIndex, EBX
         .ENDIF
         inc EBX
     .ENDW
 
+    inc menorIndex
     push menorIndex
-    fld menor
     push dirTmp
     ret
 MenorLista ENDP
