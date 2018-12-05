@@ -22,6 +22,7 @@ includelib \masm32\Irvine\Kernel32.lib
     messageGetArrLista BYTE ". Valor de ArrLista: ", 0
     messageMenorLista BYTE "El menor de la lista es: ", 0
     coma BYTE ", ", 0
+    messageBye BYTE "ADIOS", 0
 
     dirTmp DWORD ?
 
@@ -75,6 +76,10 @@ main PROC
     push OFFSET arrLista
     CALL Imprime
     ; imprime “Adios”
+
+    mov EDX, OFFSET messageBye
+    call CrLf
+    call WriteString
 
 exit  
 main ENDP
