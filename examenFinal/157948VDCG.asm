@@ -37,6 +37,8 @@ limit SDWORD -66
 messageHeader BYTE "IDentificador            Ganancia", 0
 messageTab BYTE "	", 0
 
+messageBze BYTE "ADIOS.", 0
+
 .CODE
 main PROC
 	finit
@@ -49,6 +51,10 @@ main PROC
 
 	push OFFSET list2n
 	call DOCE
+
+	call CrLF
+	mov EDX, OFFSET messageBze
+	call WriteString
 
 	exit
 main ENDP
