@@ -14,9 +14,8 @@ includelib \masm32\Irvine\Kernel32.lib
 .DATA
 ; Declaracion de datos
     x REAL8 0.0
-    sum REAL8 0.0
-    cont REAL8 1.0
-    increment REAL8 1.0
+    sign REAL8 1.0
+    cont DWORD ?
 
     messageGetN BYTE "Valor de N: ", 0
     messageGetX BYTE "Valor de X: ", 0
@@ -39,32 +38,31 @@ main PROC
 
     call funcSer
     call WriteFloat
+    call CrLf
+
+    mov EDX, OFFSET messageBye
+    call WriteString
 exit  
 main ENDP
 ; Termina el procedimiento principal
 
 funcSer PROC
     push EBP
-
     mov EBP, ESP
-    add EBP, 8
+
     mov EBX, 1
-    inc DWORD PTR [EBP]
-    .WHILE EBX < DWORD PTR [EBP]
-        fld cont
-        fdiv 
-        call ShowFPUStack
-        fadd sum
-        fchs
-        fstp sum
-        fld x
-        fld cont
-        fadd increment
-        fstp cont
+    .WHILE EBX < [EBP + 8]
         inc EBX
+        mov cont, EBX
+        fld x
+        fidiv cont
+        fld sign
+        fchs
+        fst sign
+        fmul
+        fadd
     .ENDW
 
-    fld sum
     pop EBP
     ret
 funcSer ENDP
